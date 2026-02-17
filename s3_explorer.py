@@ -16,6 +16,7 @@ parser = argparse.ArgumentParser(description="Explorer un bucket S3 public et ca
 parser.add_argument("--prefix", required=True, help="Préfixe S3 à explorer")
 parser.add_argument("--extensions", nargs="*", help="Extensions à filtrer (ex: .tar .nc)")
 parser.add_argument("--details", action="store_true", help="Afficher les stats des dossiers explorés")
+parser.add_argument("--quiet", action="store_true", help="Désactive les logs des barres de progression")
 parser.add_argument("--download", action="store_true", help="Télécharger les fichiers")
 parser.add_argument("--dest", help="Dossier local de destination")
 
@@ -52,7 +53,7 @@ total_ignored = 0
 
 paginator = s3.get_paginator("list_objects_v2")
 
-with tqdm(desc="🔎 Analyse du dépôt", unit=" fichier") as analyse_progression_bar:
+with tqdm(desc="🔎 Analyse du dépôt", unit=" fichier", disable=args.quiet) as analyse_progression_bar:
     for page in paginator.paginate(Bucket=BUCKET, Prefix=PREFIX):
         for obj in page.get("Contents", []):
             key = obj["Key"]
@@ -91,12 +92,7 @@ if args.download:
     # Réinitialise la pagination
     paginator = s3.get_paginator("list_objects_v2")
 
-    with tqdm(
-        total=total_bytes,
-        desc="💾 Téléchargement",
-        unit="B",
-        unit_scale=True,
-    ) as progress_bar:
+    with tqdm(total=total_bytes, desc="💾 Téléchargement", unit="B", unit_scale=True, disable=args.quiet) as progress_bar:
         for page in paginator.paginate(Bucket=BUCKET, Prefix=PREFIX):
             for obj in page.get("Contents", []):
                 key = obj["Key"]
