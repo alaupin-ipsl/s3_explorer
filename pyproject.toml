@@ -1,0 +1,21 @@
+[project]
+name = "aws-drias"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "boto3>=1.42.36",
+    "tqdm>=4.67.3",
+]
+
+[tool.ruff]
+lint.select = ["ALL"]
+lint.ignore = [
+    "T20", # T20 to ignore the "print statement found" warning, which is common in pre-commit hooks
+    "D4",  # to ignore docstring formatting
+    "D200",
+    "D202",
+    "D212",
+]
+line-length = 176
