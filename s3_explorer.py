@@ -18,14 +18,16 @@ parser.add_argument("--extensions", nargs="*", help="Extensions à filtrer (ex :
 parser.add_argument("--details", action="store_true", help="Afficher les stats des dossiers explorés")
 parser.add_argument("--quiet", action="store_true", help="Désactive les logs des barres de progression")
 parser.add_argument("--download", action="store_true", help="Télécharger les fichiers")
-parser.add_argument("--dest", help="Dossier local de destination")
+parser.add_argument("--output", help="Dossier de destination du téléchargement")
 
 args = parser.parse_args()
 
-if args.download and args.dest:
-    DEST_ROOT = Path(args.dest)
-elif args.download or args.dest:
-    raise
+if args.download and args.output:
+    OUTPUT_ROOT = Path(args.output)
+elif args.download and not args.output:
+    parser.error("L'option --output est requise en utilisant l'option --download.")
+elif args.output and not args.download:
+    parser.error("L'option --download est requise en utilisant l'option --output.")
 
 # Normalisation des extensions
 extensions = None
@@ -109,7 +111,7 @@ if args.download:
                         continue
 
                 # Téléchargement
-                local_path = DEST_ROOT / key
+                local_path = OUTPUT_ROOT / key
                 local_path.parent.mkdir(parents=True, exist_ok=True)
 
                 s3.download_file(BUCKET, key, str(local_path))
@@ -146,6 +148,6 @@ print(f"    ├─ taille   : {total_bytes / (1024 ** 3):.2f} Go")
 print(f"    └─ ignorés   : {total_ignored}")
 if args.download:
     if downloaded_files == 1:
-        print(f"💾 1 fichier téléchargé ({downloaded_bytes / (1024**3):.2f} Go) dans : {DEST_ROOT.resolve()}")
+        print(f"💾 1 fichier téléchargé ({downloaded_bytes / (1024**3):.2f} Go) dans : {OUTPUT_ROOT.resolve()}")
     else:
-        print(f"💾 {downloaded_files} fichiers téléchargés ({downloaded_bytes / (1024**3):.2f} Go) dans : {DEST_ROOT.resolve()}")
+        print(f"💾 {downloaded_files} fichiers téléchargés ({downloaded_bytes / (1024**3):.2f} Go) dans : {OUTPUT_ROOT.resolve()}")
