@@ -19,3 +19,8 @@ lint.ignore = [
     "D212",
 ]
 line-length = 176
+
+[dependency-groups]
+dev = [
+    "boto3-stubs[essential]>=1.42.51",
+]
