@@ -14,7 +14,7 @@ from config import BUCKET, ENDPOINT_URL
 # Paramétrage des arguments
 parser = argparse.ArgumentParser(description="Explorer un bucket S3 public et calculer des stats par dossier.")
 parser.add_argument("--prefix", required=True, help="Préfixe S3 à explorer")
-parser.add_argument("--extensions", nargs="*", help="Extensions à filtrer (ex: .tar .nc)")
+parser.add_argument("--extensions", nargs="*", help="Extensions à filtrer (ex : .tar .nc)")
 parser.add_argument("--details", action="store_true", help="Afficher les stats des dossiers explorés")
 parser.add_argument("--quiet", action="store_true", help="Désactive les logs des barres de progression")
 parser.add_argument("--download", action="store_true", help="Télécharger les fichiers")
@@ -136,16 +136,16 @@ if args.details:
         ignored = stats[folder]["ignored"]
         print(f"    {folder}")
         print(f"      ├─ fichiers : {files}")
-        print(f"      ├─ taille   : {size_gb:.2f}Go")
+        print(f"      ├─ taille   : {size_gb:.2f} Go")
         print(f"      └─ ignorés   : {ignored}")
         print()
 
 print("    📂 TOTAL")
 print(f"    ├─ fichiers : {total_files}")
-print(f"    ├─ taille   : {total_bytes / (1024 ** 3):.2f}Go")
+print(f"    ├─ taille   : {total_bytes / (1024 ** 3):.2f} Go")
 print(f"    └─ ignorés   : {total_ignored}")
 if args.download:
     if downloaded_files == 1:
-        print(f"💾 1 fichier téléchargé ({downloaded_bytes / (1024**3):.2f}Go) dans : {DEST_ROOT.resolve()}")
+        print(f"💾 1 fichier téléchargé ({downloaded_bytes / (1024**3):.2f} Go) dans : {DEST_ROOT.resolve()}")
     else:
-        print(f"💾 {downloaded_files} fichiers téléchargés ({downloaded_bytes / (1024**3):.2f}Go) dans : {DEST_ROOT.resolve()}")
+        print(f"💾 {downloaded_files} fichiers téléchargés ({downloaded_bytes / (1024**3):.2f} Go) dans : {DEST_ROOT.resolve()}")
